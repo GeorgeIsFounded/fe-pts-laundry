@@ -1,9 +1,9 @@
 import React from 'react';
-import Input from '../komponen/input';
-import Laundry from '../images/laundry.jpeg';
-import Laundry2 from '../images/laundry.jpg';
-import Laundry3 from '../images/clothe1.jpg';
-import Laundry4 from '../images/clothe2.jpg';
+import Input from '../../komponen/input';
+import Laundry from '../../images/laundry.jpeg';
+import Laundry2 from '../../images/laundry.jpg';
+import Laundry3 from '../../images/clothe1.jpg';
+import Laundry4 from '../../images/clothe2.jpg';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay, Pagination } from 'swiper';
 import 'swiper/css';
@@ -11,8 +11,22 @@ import 'swiper/css/autoplay';
 import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import Swal from 'sweetalert2';
+import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { authLogin } from '../redux/action/authAction';
 
 const Login = () => {
+  let dispatch = useDispatch();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [payload, setPayload] = React.useState({
+    username: '',
+    password: '',
+  });
+  const SignupSchema = Yup.object().shape({
+    password: Yup.string()
+      .min(8, 'Password must have 8 lenght')
+      .required('Required'),
+  });
   let navigate = useNavigate();
   return (
     <div className="p-10">
@@ -23,39 +37,63 @@ const Login = () => {
             <div className="h-2 bg-black w-[50px] rounded-xl"></div>
           </div>
           <Formik
-            initialValues={{ email: '', password: '' }}
+            validationSchema={SignupSchema}
+            initialValues={{ username: '', password: '' }}
             validate={(values) => {
               const errors = {};
-              if (!values.email) {
-                errors.email = 'Required';
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = 'Invalid email address';
-              }
+              if (!values.username) {
+                errors.username = 'Required';
+              } 
               if (!values.password) {
                 errors.password = 'Required';
               }
               return errors;
             }}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={ async(values, { setSubmitting }) => {
+              try {
+                setIsLoading(true);
+                const response = await dispatch(authLogin(payload));
+                if (response?.status === 'berhasil') {
+                  const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer)
+                      toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                  })
+                  Toast.fire({
+                    icon: 'success',
+                    title: 'Signed in successfully'
+                  })
+                  return navigate('/home', { replace: true });
+                } else {
+                  const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer);
+                      toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                  });
+          
+                  Toast.fire({
+                    icon: 'error',
+                    title: 'Check again',
+                  });
+                }
+              } catch (err) {
+                console.log(err);
+              } finally {
+                setIsLoading(false);
+              }
               setTimeout(() => {
-                const Toast = Swal.mixin({
-                  toast: true,
-                  position: 'top-end',
-                  showConfirmButton: false,
-                  timer: 2000,
-                  timerProgressBar: true,
-                  didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                  },
-                });
-                Toast.fire({
-                  icon: 'success',
-                  title: 'Registered successfully',
-                });
-                navigate('/dashboard');
                 setSubmitting(false);
               }, 400);
             }}
@@ -76,15 +114,15 @@ const Login = () => {
                 <div className="flex items-center space-x-[160px] w-[600px]">
                   <div>
                     <Input
-                      value={values.email}
-                      type="email"
+                      value={values.username}
+                      type="username"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      label={'Email'}
-                      name="email"
+                      label={'username'}
+                      name="username"
                     />
                     <h1 className="text-red-500">
-                      {errors.email && touched.email && errors.email}
+                      {errors.username && touched.username && errors.username}
                     </h1>
                   </div>
                   <div className="h-2 bg-black w-[30px] rounded-xl"></div>
@@ -149,6 +187,7 @@ const Login = () => {
             modules={[Navigation, Pagination, Autoplay]}
             navigation
             autoplay={{ delay: 2000 }}
+            spaceBetween={10}
             slidesPerView={1}
             pagination={{ clickable: true }}
             onSlideChange={() => console.log('slide change')}
@@ -156,16 +195,16 @@ const Login = () => {
             effect=""
           >
             <SwiperSlide className="w-[500px]" data-swiper-autoplay="2000">
-              <img className="h-[700px]" src={Laundry} alt="" />
+              <img className="h-[700px] rounded-lg" src={Laundry} alt="" />
             </SwiperSlide>
             <SwiperSlide className="w-[500px]" data-swiper-autoplay="2000">
-              <img className="h-[700px]" src={Laundry2} alt="" />
+              <img className="h-[700px] rounded-lg" src={Laundry2} alt="" />
             </SwiperSlide>
             <SwiperSlide className="w-[500px]" data-swiper-autoplay="2000">
-              <img className="h-[700px]" src={Laundry3} alt="" />
+              <img className="h-[700px] rounded-lg" src={Laundry3} alt="" />
             </SwiperSlide>
             <SwiperSlide className="w-[500px]" data-swiper-autoplay="2000">
-              <img className="h-[700px]" src={Laundry4} alt="" />
+              <img className="h-[700px] rounded-lg" src={Laundry4} alt="" />
             </SwiperSlide>
           </Swiper>
         </div>

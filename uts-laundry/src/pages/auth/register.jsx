@@ -1,9 +1,9 @@
 import React from 'react';
-import Input from '../komponen/input';
-import Laundry from '../images/laundry.jpeg';
-import Laundry2 from '../images/laundry.jpg';
-import Laundry3 from '../images/clothe1.jpg';
-import Laundry4 from '../images/clothe2.jpg';
+import Input from '../../komponen/input';
+import Laundry from '../../images/laundry.jpeg';
+import Laundry2 from '../../images/laundry.jpg';
+import Laundry3 from '../../images/clothe1.jpg';
+import Laundry4 from '../../images/clothe2.jpg';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay, Pagination } from 'swiper';
 import 'swiper/css';
@@ -30,7 +30,7 @@ const Register = () => {
           </div>
           <Formik
             validationSchema={SignupSchema}
-            initialValues={{ email: '', password: '', jenisKelamin: '...' }}
+            initialValues={{ email: '', password: '', role: '...' }}
             validate={(values) => {
               const errors = {};
               if (!values.email) {
@@ -40,11 +40,13 @@ const Register = () => {
               ) {
                 errors.email = 'Invalid email address';
               }
-              if (!values.jenisKelamin) {
-                errors.jenisKelamin = 'Required';
+              if (!values.role) {
+                errors.role = 'Required';
               }
               if (!values.password) {
                 errors.password = 'Required';
+              } else if (values.password < 8) {
+                errors.password = 'Password must have 8 lenght';
               }
               return errors;
             }}
@@ -102,18 +104,17 @@ const Register = () => {
                 </div>
                 <div className="flex items-center space-x-[160px] w-[600px]">
                   <div className="border-b-2 border-black space-y-3">
-                    <h1>Jenis Kelamin</h1>
+                    <h1>Role</h1>
                     <select
-                      className="w-[270px] hover:border-l-2 hover:border-r-2 hover:border-t-2 hover:border-black"
-                      value={values.jenisKelamin}
-                      type="jenisKelamin"
+                      className="p-1 w-[270px] hover:border-l-2 hover:border-r-2 hover:border-t-2 hover:border-black"
+                      value={values.role}
+                      type="boolean"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      name="jenisKelamin"
+                      name="role"
                     >
-                      <option value="...">...</option>
-                      <option value="laki-laki">laki-laki</option>
-                      <option value="perempuan">perempuan</option>
+                      <option value="owner">owner</option>
+                      <option value="kasir">kasir</option>
                     </select>
                   </div>
                   <div className="h-2 bg-black w-[30px] rounded-xl"></div>

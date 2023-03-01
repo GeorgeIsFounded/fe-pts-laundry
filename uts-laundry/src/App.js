@@ -1,8 +1,10 @@
 import React from 'react';
-import Login from './pages/login';
-import Register from './pages/register';
+import Login from './pages/auth/login';
+import Register from './pages/auth/register';
 import ForgotPassword from './pages/forgotPassword';
-import Dashboard from './pages/dashboard';
+import Home from './pages/dashboard/home';
+import Outlet from './pages/dashboard/home/outlet';
+import Member from './pages/dashboard/home/member';
 import { Route, Routes, Navigate } from 'react-router-dom';
 
 function App() {
@@ -12,7 +14,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/home" element={<Home />}>
+          <Route path="outlet" element={<Outlet />} />
+          <Route path="member" element={<Member />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </React.Fragment>
   );

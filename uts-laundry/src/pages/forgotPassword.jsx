@@ -2,7 +2,7 @@ import React from 'react';
 import Input from '../komponen/input';
 import emailPic from '../images/sendmail.png';
 import 'swiper/css/autoplay';
-import Register from './register';
+import Register from './auth/register';
 import { useNavigate } from 'react-router-dom';
 import { BsFillCaretLeftFill } from 'react-icons/bs';
 import { MdEmail, MdSend } from 'react-icons/md';
@@ -25,7 +25,9 @@ const ForgotPassword = () => {
             </div>
             <div className="flex items-center justify-between w-full">
               <Input label={'Email'} name="email" />
-              <div className=""><MdEmail size={30}/></div>
+              <div className="">
+                <MdEmail size={30} />
+              </div>
             </div>
           </div>
           <div className="flex w-[860px] mt-40 items-center space-x-24 justify-between">
@@ -41,7 +43,10 @@ const ForgotPassword = () => {
               onClick={() => {}}
               className="bg-black w-72 h-16 text-white hover:border-black hover:border-2 hover:text-black hover:bg-white hover:scale-120 duration-150"
             >
-              <div className='flex items-center justify-center'>Send <MdSend className='ml-2 hover:translate-x-3 duration-150'/></div> 
+              <div className="flex items-center justify-center">
+                Send{' '}
+                <MdSend className="ml-2 hover:translate-x-3 duration-150" />
+              </div>
             </button>
           </div>
         </div>
